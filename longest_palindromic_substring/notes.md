@@ -131,3 +131,5 @@ def my_longest_palindrome(s):
 
 ```
 
+T.C(n) -> O(n^2)
+S.C(n) -> O(1) (if you only keep track of the indicies) but if you keep splitting on the different expansions, it quickly becomes n^2.
