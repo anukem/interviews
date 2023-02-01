@@ -60,3 +60,38 @@ print(concatenated_words(["cat","cats","catsdogcats","dog","dogcatsdog","hippopo
 
 This solution sort of works for cases where a word is comprised ONLY of two smaller words, but fails to grab the last word "ratdog" because its the result of first removing cat, and then removing rat and finally removing dog. The whole approach seemed like it could've worked, but looking at this after the fact, I think there's some data structure (A Trie?) that could've made life easier. In hindsight, if I was doing this again, i think I would try to use an algorithm to do DFS on a given word, using the existing dictionary, but not entirely sure that would work either.
 
+---
+*the solution*
+
+Turns out I was right that DFS is exactly what we want to do here. The goal is to figure out where we want to split a word and then recurse on the remaining string to determine if we could find an answer.
+
+```
+def print_2d_array(arr):
+    for lst in arr:
+        print(lst)
+
+def concatenated_words(words):
+
+    valid_words = set(words)
+    def can_split_word(word):
+        for idx in range(len(word)):
+            left = word[:idx]
+            right = word[idx:]
+
+            if left in valid_words:
+                if right in valid_words or can_split_word(right):
+                    return True
+        return False
+
+
+    ans = []
+    for word in words:
+        if can_split_word(word):
+            ans.append(word)
+    return ans
+
+print(concatenated_words(["cat","cats","catsdogcats","dog","dogcatsdog","hippopotamuses","rat","ratcatdogcat"]) == ["catsdogcats", "dogcatsdog", "ratcatdogcat"])
+print(concatenated_words(["cat","cats", "catscats","catsdogcats","dog","dogcatsdog","hippopotamuses","rat","ratcatdogcat"]) == ["catscats", "catsdogcats", "dogcatsdog", "ratcatdogcat" ])
+
+```
+
