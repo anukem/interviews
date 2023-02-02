@@ -2,18 +2,10 @@ import scala.collection.mutable.ListBuffer
 
 object Solution {
 
-  def multiply(s: String, n: Int): String = {
-    val sb = new StringBuilder()
-    for (i <- 0 until n) {
-      sb.append(s)
-    }
-    sb.toString()
-  }
-
   def getMultiples(s: String): List[String] = {
     var multiples = ListBuffer[String]()
     for (i <- 1 to s.length) {
-      if (s.length % i == 0 && multiply(s.substring(0, i), s.length / i) == s) {
+      if (s.length % i == 0 && (s.substring(0, i) * (s.length / i)) == s) {
         multiples.insert(0, s.substring(0, i))
       }
     }
@@ -39,6 +31,6 @@ object Solution {
   }
 
   def main(args: Array[String]): Unit = {
-    gcdOfStrings("ABCABC", "ABC")
+    println(gcdOfStrings("ABCABC", "ABC"))
   }
 }
