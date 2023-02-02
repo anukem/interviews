@@ -1,3 +1,5 @@
 *.conf
 .metals/
 .vscode/
+*.class
+*.tasty
