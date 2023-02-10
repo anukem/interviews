@@ -1,7 +1,7 @@
 from typing import List
 
 
-def totalFruit(self, fruits: List[int]) -> int:
+def totalFruit(fruits: List[int]) -> int:
     start, end = 0, 1
 
     if len(fruits) == 0:
@@ -21,8 +21,13 @@ def totalFruit(self, fruits: List[int]) -> int:
             start = end - 1
             while fruits[start] == fruits[end - 1]:
                 start -= 1
-                start += 1
                 baskets = set([fruits[start], fruits[end]])
         else:
             baskets.add(fruits[end])
             maxLength = max(maxLength, end - start + 1)
+
+    return maxLength
+
+
+print(totalFruit([1, 2, 1, 3]) == 3)
+print(totalFruit([1, 1, 1, 2, 2, 3]) == 5)
