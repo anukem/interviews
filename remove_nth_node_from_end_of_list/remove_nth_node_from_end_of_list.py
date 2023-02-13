@@ -53,7 +53,7 @@ class TestSamples(unittest.TestCase):
         head.next.next = ListNode()
         head.next.next.next = ListNode()
         head.next.next.next.next = ListNode()
-        test = traverse(head, [])
+        test = Solution().removeNthFromEnd(head, 1)
         self.assertEqual(test, head)
 
     # def test_max_performance_with_k_as_three(self):
