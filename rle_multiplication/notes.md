@@ -110,3 +110,7 @@ def condense(rle_a, rle_b, rle_c, index):
 
 assert condense([(1, 3), (2, 1), (3, 2)], [(2, 3), (3, 3)], [], 0) == [2, 2, 2, 6, 9, 9]
 
+*Important thing to note:* My solution here is extremely space intensive on each subsequent call to
+condense because I'm doing an O(n) operation to split the array, but it is possible to get around
+that by simply using the indicies of rle_a and b respectively to track where in the array I am.
+
