@@ -56,9 +56,5 @@ class TestSamples(unittest.TestCase):
         test = Solution().removeNthFromEnd(head, 1)
         self.assertEqual(test, head)
 
-    # def test_max_performance_with_k_as_three(self):
-    #     test = maxPerformance(6, [2, 10, 3, 1, 5, 8], [5, 4, 3, 9, 7, 2], 3)
-    #     self.assertEqual(test, 68)
-
 
 unittest.main(exit=False)
