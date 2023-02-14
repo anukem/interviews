@@ -15,6 +15,8 @@ So my thought here is to use two pointers.
 The first will start at the beginning and the end with start at the `start + 1`.
 From there, I'll try to expand outward while I can, and if I hit a point where I can't,
 i'll record the max length I've seen thus far, and reset the pointers to be `start = end`, and `end = start + 1` and redo the process.
+Note: the algorithm i described above didn't take into account the fact that the fruit immediately preceding the start might also
+contribute to the size of of the largest number of fruits picked.
 
 After 34 min, I came up with the following solution
 
@@ -34,7 +36,6 @@ class Solution:
       maxLength = 2
       baskets = set([fruits[0], fruits[1]])
       while end < len(fruits):
-        print(start, end)
         if fruits[end] in baskets:
           maxLength = max(maxLength, end - start + 1)
           end += 1
