@@ -48,7 +48,6 @@ class Solution:
         else:
           baskets.add(fruits[end])
           maxLength = max(maxLength, end - start + 1)
-        print(maxLength)
         
       return maxLength
 ```

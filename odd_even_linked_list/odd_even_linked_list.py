@@ -46,5 +46,3 @@ def oddEvenList(self, head: Optional[ListNode]) -> Optional[ListNode]:
             return traverse(oddRoot, evenRoot, nextNode, Cardinality.Odd, currOdd, currEven)
     
     return traverse(None, None, head, Cardinality.Odd, None, None)
-
-
