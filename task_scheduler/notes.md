@@ -1,84 +1,99 @@
-Sure! Here's an explanation of the greedy approach:
 
-The idea behind the greedy approach is to schedule the tasks with the highest frequency first, in order to minimize the amount of idle time. We can do this by iterating over the tasks and maintaining a count of the frequency of each task. We can then repeatedly choose the task with the highest frequency that can be scheduled next, and update the count accordingly.
+[Meduim]
+[[Interview Question]]
 
-Here's a step-by-step algorithm for the greedy approach:
+Given a characters array `tasks`, representing the tasks a CPU needs to do, where each letter represents a different task. Tasks could be done in any order. Each task is done in one unit of time. For each unit of time, the CPU could complete either one task or just be idle.
 
-Count the frequency of each task and store it in a hash map or an array.
+However, there is a non-negative integer `n` that represents the cooldown period between two **same tasks** (the same letter in the array), that is that there must be at least `n` units of time between any two same tasks.
 
-Sort the tasks in descending order of their frequency.
+Return _the least number of units of times that the CPU will take to finish all the given tasks_.
 
-Initialize a time counter t to 0.
+**Example 1:**
 
-While there are still unscheduled tasks:
+**Input:** tasks = ["A","A","A","B","B","B"], n = 2
+**Output:** 8
+**Explanation:**
+A -> B -> idle -> A -> B -> idle -> A -> B
+There is at least 2 units of time between any two same tasks.
 
-Initialize a variable max_freq to 0 and a variable max_freq_count to 0.
-Iterate over the sorted tasks, and for each task:
-If the task's frequency is greater than max_freq, and its cooldown period has passed since its last occurrence, set max_freq to the task's frequency and set max_freq_count to 1.
-Else if the task's frequency is equal to max_freq and its cooldown period has passed since its last occurrence, increment max_freq_count.
-If there are no tasks that can be scheduled at this time, increment t and continue to the next iteration of the loop.
-Otherwise, schedule the task with the highest frequency that can be scheduled next, and update the count of that task in the frequency map.
-Decrement the frequency of the scheduled task, and update the cooldown period of that task in the cooldown map.
-Increment t.
-Return the time counter t.
+**Example 2:**
 
-In this algorithm, we use two maps to keep track of the frequency and cooldown of each task. The cooldown map stores the time of the last occurrence of each task, and we use it to make sure that there is a cooldown period of n between any two same tasks.
+**Input:** tasks = ["A","A","A","B","B","B"], n = 0
+**Output:** 6
+**Explanation:** On this case any permutation of size 6 would work since n = 0.
+["A","A","A","B","B","B"]
+["A","B","A","B","A","B"]
+["B","B","B","A","A","A"]
+...
+And so on.
 
-The time complexity of this algorithm is O(N), where N is the number of tasks, since we iterate over the tasks once and do constant-time operations for each task. The space complexity is O(26) = O(1), since there are at most 26 different tasks.
+**Example 3:**
+
+**Input:** tasks = ["A","A","A","A","A","A","B","C","D","E","F","G"], n = 2
+**Output:** 16
+**Explanation:**
+One possible solution is
+A -> B -> C -> A -> D -> E -> A -> F -> G -> A -> idle -> idle -> A -> idle -> idle -> A
+
+---
+I ended up spending the better part of an hour and a half looking at this problem. My original idea was to keep a priority queue of all the tasks with the intent of trying to do the hard task of keeping track of what the time was, and whether or not I could take a specific task at a time t. That turns out to be hard to keep track of long term. So instead the easier thing to do is keep track of what happens in the span of the "cooldown" time. So if n = 3, for every 3 seconds, how many tasks are you able to complete? Obviously if there are enough tasks, you complete 3, but no matter what you will either have completed all your tasks, or only completed as many as you could before having to go idle. So in that way, we can keep chunking out n seconds until all the tasks are completed. If we're interested in the cases where we are idle, its every span of n seconds where we don't have enough tasks to do. I ended up asking ChatGPT to explain, and nothing made sense until I looked at the code I wrote for this back in 2020.
 
 
-
-
-Ezeugo Anukem
-Can you write that out in python?
-Sure! Here's an implementation of the greedy approach in Python:
-
-python
-Copy code
-from collections import defaultdict
-
-def leastInterval(tasks, n):
-    # Step 1: count the frequency of each task
-    freq_map = defaultdict(int)
+In short, here's an iterative approach to get to the answer
+```python
+def task_scheduler(tasks, n):
+    task_map = {}
     for task in tasks:
-        freq_map[task] += 1
-    
-    # Step 2: sort the tasks in descending order of their frequency
-    sorted_tasks = sorted(freq_map.keys(), key=lambda x: freq_map[x], reverse=True)
-    
-    # Step 3: initialize a time counter
-    t = 0
-    
-    # Step 4: schedule the tasks
-    while sorted_tasks:
-        # Find the task with the highest frequency that can be scheduled next
-        max_freq, max_freq_count = 0, 0
-        for task in sorted_tasks:
-            if freq_map[task] > max_freq and t - cooldown_map.get(task, -n-1) > n:
-                max_freq = freq_map[task]
-                max_freq_count = 1
-            elif freq_map[task] == max_freq and t - cooldown_map.get(task, -n-1) > n:
-                max_freq_count += 1
-        
-        # If no task can be scheduled at this time, increment the time counter
-        if max_freq == 0:
-            t += 1
-            continue
-        
-        # Schedule the task with the highest frequency that can be scheduled next
-        for task in sorted_tasks:
-            if freq_map[task] == max_freq and t - cooldown_map.get(task, -n-1) > n:
-                freq_map[task] -= 1
-                cooldown_map[task] = t
-                if freq_map[task] == 0:
-                    sorted_tasks.remove(task)
-                break
-        
-        # Increment the time counter
-        t += 1
-    
-    # Step 5: return the time counter
-    return t
-In this implementation, we use a defaultdict to count the frequency of each task, and a sorted list to store the tasks in descending order of their frequency. We also use a cooldown_map to keep track of the cooldown period of each task.
+        task_map[task] = 1 if task not in task_map else task_map[task] + 1
 
-Note that this implementation assumes that the tasks are represented as characters (e.g., 'A', 'B', etc.), and that the cooldown period is given as an integer. If the tasks are represented differently (e.g., as integers), or if the cooldown period is given differently (e.g., as a time duration), some modifications may be needed.
+    answer = 0
+    queue = [(task_map[task]) for task in task_map]
+
+    while len(queue) != 0:
+        queue = sorted(queue, reverse=True)
+        completed_tasks = n + 1
+        processing = []
+        for i in range(n + 1):
+            if len(queue) != 0:
+                processing.append(queue.pop(0))
+
+        for i in reversed(range(len(processing))):
+            if processing[i] - 1 > 0:
+                queue.insert(0, processing[i] - 1)
+
+        answer += len(processing) if len(queue) == 0 else completed_tasks
+```
+
+Will spend at MOST 20 minutes trying to do this functionally, before moving onto something else.
+
+```python
+def leastInterval(self, tasks: List[str], n: int) -> int:
+      freq = {}
+      for task in tasks:
+        freq[task] = 1 if task not in freq else freq[task] + 1
+
+      taskCount = [-freq[x] for x in freq]
+      heapify(taskCount)
+      def task_scheduler(queue, n, count):
+
+        processing = []
+        t = n + 1
+        while queue and t > 0:
+          processing.append(-heappop(queue))
+          t -= 1
+
+        for task in reversed(processing):
+          task -= 1
+          if task != 0:
+            heappush(queue, -task)
+
+
+        if queue:
+          return task_scheduler(queue, n, count + n + 1)
+        else:
+          return count + len(processing)
+
+      return task_scheduler(taskCount, n, 0)
+```
+
+At exactly 19 minutes lol
