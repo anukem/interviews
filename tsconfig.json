@@ -1,0 +1,28 @@
+{
+  "ts-node": {
+    "cwd": "/Users/ezeugo/interviews",
+    "projectSearchDir": "/Users/ezeugo/interviews"
+  },
+  "compilerOptions": {
+    "lib": [
+      "es2020"
+      , "DOM"
+    ],
+    "module": "commonjs",
+    "target": "es2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node10",
+    "types": [
+      "node"
+    ],
+    "sourceMap": true,
+    "inlineSourceMap": false,
+    "inlineSources": true,
+    "declaration": false,
+    "noEmit": false,
+    "outDir": "./.ts-node"
+  }
+}
