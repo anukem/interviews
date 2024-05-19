@@ -1,6 +1,5 @@
-from pprint import pprint
-class Solution:
-    def containVirus(self, isInfected: List[List[int]]) -> int:
+from collections import defaultdict
+def containVirus(isInfected):
       def isWall(pos, wasGerm):
         x, y = pos
         if x < 0 or x == len(isInfected) or y < 0 or y == len(isInfected[0]):
@@ -79,7 +78,7 @@ class Solution:
       def growVirus(graph, pos):
         x, y = pos
         if isInfected[x][y] == -1:
-          return
+            return
         if isWall((x, y + 1), True) == 1:
           isInfected[x][ y + 1] = 1
         if isWall((x, y - 1), True) == 1:
@@ -128,3 +127,7 @@ class Solution:
           markContained(max_key, graph)
       
       return total
+
+
+grid = [[0,1,0,0,0,0,0,1],[0,1,0,1,0,0,0,1],[0,0,0,0,0,0,0,1]];
+containVirus(grid)
